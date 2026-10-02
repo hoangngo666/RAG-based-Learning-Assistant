@@ -36,7 +36,7 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
             ⇧
           </div>
           <h2 className="mt-7 text-3xl font-semibold tracking-[-0.04em] text-foreground">
-            Start by uploading a document
+            Upload your study material to begin 🎓
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             AIO reads PDFs like lecture slides, textbooks, and notes so every answer can stay grounded in your study material.
