@@ -1,6 +1,3 @@
-import { CitationPill } from "./CitationPill";
-
-import { parseCitations } from "@/lib/citations";
 import type { ChatMessage } from "@/lib/types";
 
 /*
@@ -36,8 +33,7 @@ function HcmutLogo() {
         />
       </div>
 
-      {/* Logo: phóng to để bù phần trong suốt thừa của file ảnh.
-          Chỉnh vị trí bằng -translate-x / -translate-y bên dưới. */}
+      {/* Logo HCMUT */}
       <div className="absolute inset-0 flex items-center justify-center">
         <img
           src="/hcmut-logo.png"
@@ -51,29 +47,23 @@ function HcmutLogo() {
 
 function AioMark() {
   return (
-    <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl border border-border/70 bg-muted text-sm text-accent">
-      ✦
-    </span>
+    <div className="relative flex size-9 shrink-0 items-center justify-center rounded-2xl border border-white/25 bg-gradient-to-br from-[#0066ff] to-[#0042a5] text-sm text-white shadow-[0_6px_16px_rgba(0,102,255,0.35),inset_0_1px_0_rgba(255,255,255,0.35)]">
+      <span>✦</span>
+    </div>
   );
 }
 
+/*
+ * Hiển thị câu trả lời AI, đồng thời loại bỏ các dấu vết định dạng [1], (1)...
+ */
 function AssistantText({ message }: { message: ChatMessage }) {
-  const citationsByIndex = new Map(
-    (message.citations ?? []).map((citation) => [citation.index, citation]),
-  );
+  const cleanedContent = message.content
+    ? message.content.replace(/\s*[\[\(]\d+[\]\)]/g, "")
+    : "";
 
   return (
     <p className="whitespace-pre-wrap text-[15px] leading-7 text-foreground/90">
-      {parseCitations(message.content).map((part, index) =>
-        part.type === "text" ? (
-          <span key={index}>{part.text}</span>
-        ) : (
-          <CitationPill
-            key={index}
-            citation={citationsByIndex.get(part.index)}
-          />
-        ),
-      )}
+      {cleanedContent}
 
       {message.isStreaming ? (
         <span className="ml-1 text-accent">▋</span>
@@ -98,7 +88,7 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
             answer can stay grounded in your study material.
           </p>
 
-          {/* Ô xanh dương đậm (không phải glass) */}
+          {/* Ô xanh dương đậm */}
           <div className="mt-7 rounded-3xl border border-white/20 bg-gradient-to-br from-[#1d4ed8] to-[#1e3a8a] p-5 text-left shadow-[0_20px_50px_rgba(20,30,120,0.35),inset_0_1px_0_rgba(255,255,255,0.25)]">
             <p className="text-sm font-medium text-white">
               Or type your question directly below
@@ -131,7 +121,24 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
           </article>
         ) : (
           <article key={message.id} className="flex justify-end">
-            <p className="max-w-[75%] whitespace-pre-wrap rounded-[1.6rem] rounded-br-md bg-accent px-5 py-3 text-sm leading-6 text-white">
+            <p
+              className="
+                max-w-[75%]
+                whitespace-pre-wrap
+                rounded-[1.6rem]
+                rounded-br-md
+                border border-white/15
+                bg-gradient-to-br
+                from-[#005baa]
+                to-[#003f7f]
+                px-5
+                py-3
+                text-sm
+                leading-6
+                text-white
+                shadow-[0_8px_24px_rgba(0,45,100,0.28),inset_0_1px_0_rgba(255,255,255,0.18)]
+              "
+            >
               {message.content}
             </p>
           </article>

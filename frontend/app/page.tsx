@@ -404,7 +404,7 @@ export default function Home() {
           <div className="flex min-h-screen min-w-0 flex-col">
             <header className="glass sticky top-0 z-20 flex min-h-16 items-center justify-between gap-4 px-5 md:px-7">
               <div className="flex min-w-0 items-center gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-border/70 bg-muted text-lg text-accent">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-white/25 bg-gradient-to-br from-[#0066ff] to-[#0042a5] text-lg text-white shadow-[0_6px_16px_rgba(0,102,255,0.35),inset_0_1px_0_rgba(255,255,255,0.35)]">
                   ✦
                 </span>
                 <div className="min-w-0">
@@ -492,14 +492,14 @@ export default function Home() {
         </section>
 
         <ChatComposer
-  disabled={!session}
-  sendDisabled={!hasReadyDocument || isStreaming}
-  attachDisabled={isUploading || isGeneratingFlashcards}
-  isFlashcardsOpen={isFlashcardsOpen}
-  sidebarOffsetClass={composerSidebarOffsetClass}
-  onSend={onSend}
-  onUpload={onUpload}
-/>
+          disabled={!session}
+          sendDisabled={!hasReadyDocument || isStreaming}
+          attachDisabled={isUploading || isGeneratingFlashcards}
+          isFlashcardsOpen={isFlashcardsOpen}
+          sidebarOffsetClass={composerSidebarOffsetClass}
+          onSend={onSend}
+          onUpload={onUpload}
+        />
       </div>
     </main>
   );
