@@ -492,12 +492,14 @@ export default function Home() {
         </section>
 
         <ChatComposer
-          disabled={!session}
-          sendDisabled={!hasReadyDocument || isStreaming}
-          isFlashcardsOpen={isFlashcardsOpen}
-          sidebarOffsetClass={composerSidebarOffsetClass}
-          onSend={onSend}
-        />
+  disabled={!session}
+  sendDisabled={!hasReadyDocument || isStreaming}
+  attachDisabled={isUploading || isGeneratingFlashcards}
+  isFlashcardsOpen={isFlashcardsOpen}
+  sidebarOffsetClass={composerSidebarOffsetClass}
+  onSend={onSend}
+  onUpload={onUpload}
+/>
       </div>
     </main>
   );

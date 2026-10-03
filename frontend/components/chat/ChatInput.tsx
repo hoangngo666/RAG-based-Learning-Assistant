@@ -1,15 +1,24 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useState } from "react";
+import { FormEvent, KeyboardEvent, useRef, useState } from "react";
 
 type ChatInputProps = {
   disabled?: boolean;
   sendDisabled?: boolean;
+  attachDisabled?: boolean;
   onSend: (message: string) => void;
+  onAttach: (file: File) => void;
 };
 
-export function ChatInput({ disabled, sendDisabled, onSend }: ChatInputProps) {
+export function ChatInput({
+  disabled,
+  sendDisabled,
+  attachDisabled,
+  onSend,
+  onAttach,
+}: ChatInputProps) {
   const [value, setValue] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function submit() {
     const message = value.trim();
@@ -28,6 +37,22 @@ export function ChatInput({ disabled, sendDisabled, onSend }: ChatInputProps) {
       event.preventDefault();
       submit();
     }
+  }
+
+  function openFilePicker() {
+    if (disabled || attachDisabled) return;
+    fileInputRef.current?.click();
+  }
+
+  function onFileSelected(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      onAttach(file);
+    }
+
+    // Cho phép chọn lại đúng file đó lần nữa nếu cần.
+    event.target.value = "";
   }
 
   return (
@@ -55,13 +80,23 @@ export function ChatInput({ disabled, sendDisabled, onSend }: ChatInputProps) {
           {/* Attach PDF */}
           <button
             type="button"
-            disabled
+            disabled={disabled || attachDisabled}
+            onClick={openFilePicker}
             className="glass-button-secondary rounded-full px-3 py-2 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-55"
-            aria-label="Attach PDF unavailable"
+            aria-label="Attach PDF"
           >
             <span aria-hidden="true">📎</span>
             <span>Attach PDF</span>
           </button>
+
+          {/* Hidden file picker */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,application/pdf"
+            className="hidden"
+            onChange={onFileSelected}
+          />
 
           {/* Send */}
           <button
