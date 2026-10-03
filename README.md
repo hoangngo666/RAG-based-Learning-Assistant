@@ -1,14 +1,17 @@
-# AIO
+# AIO - RAG-based Learning Assistant
 
 <p align="center">
-  A study-oriented RAG application for learning from PDFs with grounded chat, inline citations, and session-based flashcards.
+  <b>An Intelligent AI Learning Assistant Powered by RAG</b><br>
+  <i>Empowering students to search, summarize, and ask questions directly from PDF documents with grounded inline citations and study flashcards.</i>
 </p>
 
 <p align="center">
+  <img alt="HCMUT" src="https://img.shields.io/badge/University-HCMUT%20--%20VNU--HCM-00529C?style=flat-square&logo=normalize&logoColor=white">
+  <img alt="Faculty" src="https://img.shields.io/badge/Faculty-Applied%20Sciences%20(FAS)-1e293b?style=flat-square">
   <img alt="FastAPI" src="https://img.shields.io/badge/backend-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white">
   <img alt="Next.js 15" src="https://img.shields.io/badge/frontend-Next.js%2015-111111?style=flat-square&logo=nextdotjs&logoColor=white">
   <img alt="PostgreSQL" src="https://img.shields.io/badge/database-PostgreSQL%20%2B%20pgvector-336791?style=flat-square&logo=postgresql&logoColor=white">
-  <img alt="Gemini" src="https://img.shields.io/badge/generation-Gemini%202.5%20Flash-4f46e5?style=flat-square">
+  <img alt="Gemini" src="https://img.shields.io/badge/generation-Gemini%203.5%20Flash-4f46e5?style=flat-square">
   <img alt="Status" src="https://img.shields.io/badge/status-active%20prototype-7c3aed?style=flat-square">
 </p>
 
@@ -16,7 +19,23 @@ AIO lets you upload lecture slides, notes, or textbooks as PDFs, then ask questi
 
 ---
 
-## Table of contents
+## 🏫 Project Information & Team Members
+
+* **University:** Ho Chi Minh City University of Technology (HCMUT - VNU-HCM)
+* **Faculty:** Faculty of Applied Sciences (FAS)
+* **Course Project:** RAG-based Learning Assistant Project
+
+### 👥 Team Members:
+1. **Team Leader (Leader / QA & Tester)**
+   * **Role:** Quality assurance, system testing, Git repository management, and project documentation.
+2. **Backend Developer**
+   * **Role:** RESTful API development (FastAPI), RAG Pipeline construction (Chunking, Embedding, Vector Search), and Gemini API integration.
+3. **Frontend Developer**
+   * **Role:** UI/UX design (Next.js 15), Chat Workspace integration, SSE streaming management, and Flashcards interface.
+
+---
+
+## 📌 Table of contents
 
 - [Current status](#current-status)
 - [UI preview](#ui-preview)
@@ -28,7 +47,6 @@ AIO lets you upload lecture slides, notes, or textbooks as PDFs, then ask questi
 - [API overview](#api-overview)
 - [Evaluation pipeline](#evaluation-pipeline)
 - [Repository structure](#repository-structure)
-- [Implementation references](#implementation-references)
 - [License](#license)
 
 ---
@@ -36,16 +54,14 @@ AIO lets you upload lecture slides, notes, or textbooks as PDFs, then ask questi
 ## Current status
 
 ### In the current app
-
 - Session-based chat workspace is implemented
 - PDF upload and ingestion is implemented
 - Retrieval-augmented chat with streaming SSE responses is implemented
 - Inline citation hover cards are implemented
 - Flashcard generation for a session is implemented
-- Evaluation tooling exists under [backend/evaluation/](backend/evaluation/)
+- Evaluation tooling exists under `backend/evaluation/`
 
 ### Important scope notes
-
 - The **study summary** endpoint exists on the backend, but the **current frontend does not expose it yet**
 - **Redis is present in local infrastructure**, but **the current running app code does not use Redis yet**
 - The current product is best described as an **active prototype / learning project**, not a finished production platform
@@ -71,57 +87,43 @@ AIO lets you upload lecture slides, notes, or textbooks as PDFs, then ask questi
 ## What works today
 
 ### User-facing features
-
-- **Session-based study workspace**
-  - create, rename, switch, and delete sessions
-  - each session keeps its own documents and message history
-- **PDF upload and ingestion**
-  - uploads are attached to a session
-  - text-layer PDFs are parsed into chunks and embedded for retrieval
-- **Grounded chat with citations**
-  - answers stream token-by-token over SSE
-  - citations are rendered inline as `[n]`
-- **Citation hover cards**
-  - hover reveals document name, page number, and snippet text
-- **Flashcard generation**
-  - generates flashcards from ready documents in the current session
-  - supports regeneration from the same session context
-- **Evaluation pipeline**
-  - includes retrieval and generation benchmarking tools under [backend/evaluation/](backend/evaluation/)
+- **Session-based study workspace:** Create, rename, switch, and delete study sessions. Each session keeps its own documents and message history.
+- **PDF upload and ingestion:** Uploads are attached to a session. Text-layer PDFs are parsed into chunks and embedded for retrieval.
+- **Grounded chat with citations:** Answers stream token-by-token over SSE. Citations are rendered inline as `[n]`.
+- **Citation hover cards:** Hovering reveals document name, page number, and snippet text.
+- **Flashcard generation:** Generates flashcards from ready documents in the current session. Supports regeneration from the same session context.
+- **Evaluation pipeline:** Includes retrieval and generation benchmarking tools under `backend/evaluation/`.
 
 ---
 
 ## Known constraints
 
-- Optimized for **text-layer PDFs**
-- **Encrypted PDFs are not supported**
-- If a PDF has no readable text layer, ingestion fails
-- Chat and study generation require a valid **Gemini API key**
-- Redis is configured in local infra but is **not yet used** for jobs, caching, or sessions
-- The frontend currently surfaces **chat + citations + flashcards**, but not the backend summary flow
+- Optimized for **text-layer PDFs**.
+- **Encrypted PDFs are not supported**.
+- If a PDF has no readable text layer (e.g. pure image scans without OCR), ingestion fails.
+- Chat and study generation require a valid **Gemini API Key**.
+- Redis is configured in local infra but is **not yet used** for jobs, caching, or sessions.
+- The frontend currently surfaces **chat + citations + flashcards**, but not the backend summary flow.
 
 ---
 
 ## Architecture at a glance
 
 ### Backend
-
 - **Framework:** FastAPI
-- **ORM / migrations:** SQLAlchemy 2 async + Alembic
+- **ORM / Migrations:** SQLAlchemy 2 async + Alembic
 - **Database:** PostgreSQL + pgvector
-- **PDF parsing:** PyMuPDF
+- **PDF Parsing:** PyMuPDF
 - **Embeddings:** `intfloat/e5-small-v2`
 - **Reranking:** `BAAI/bge-reranker-base`
-- **Generation:** Gemini (`gemini-2.5-flash` by default)
+- **Generation:** Gemini (`gemini-3.5-flash`)
 
 ### Frontend
-
 - **Framework:** Next.js 15
-- **UI stack:** React 19 + Tailwind CSS 4
-- **Interaction model:** sidebar sessions, upload panel, streaming chat, flashcards panel
+- **UI Stack:** React 19 + Tailwind CSS 4
+- **Interaction Model:** Sidebar sessions, upload panel, streaming chat, flashcards panel
 
 ### Runtime flow
-
 1. A user opens the app and a chat session is restored or created.
 2. The user uploads a PDF into that session.
 3. The backend parses PDF text, chunks pages, computes embeddings, and stores chunks in PostgreSQL.
@@ -136,7 +138,6 @@ AIO lets you upload lecture slides, notes, or textbooks as PDFs, then ask questi
 ## Quickstart
 
 ### 1. Start local infrastructure
-
 ```bash
 docker compose up -d
 ```
@@ -158,7 +159,7 @@ Minimum required setup:
 - set `GEMINI_API_KEY` in `backend/.env`
 
 Useful backend settings include:
-
+- `DATABASE_URL`
 - `GEMINI_MODEL`
 - `EMBEDDING_MODEL_NAME`
 - `CHUNK_SIZE`
