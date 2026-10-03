@@ -68,20 +68,10 @@ AIO lets you upload lecture slides, notes, or textbooks as PDFs, then ask questi
 
 ---
 
+
 ## UI preview
 
-> **Screenshot placeholder**
->
-> Replace this block once you have a UI screenshot.
->
-> Suggested asset path:
->
-> `docs/images/aio-ui.png`
->
-> Suggested markdown:
->
-> `![AIO UI](docs/images/aio-ui.png)`
-
+![AIO UI](docs/images/app.jpg)
 ---
 
 ## What works today
