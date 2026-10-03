@@ -1,15 +1,24 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useState } from "react";
+import { FormEvent, KeyboardEvent, useRef, useState } from "react";
 
 type ChatInputProps = {
   disabled?: boolean;
   sendDisabled?: boolean;
+  attachDisabled?: boolean;
   onSend: (message: string) => void;
+  onAttach: (file: File) => void;
 };
 
-export function ChatInput({ disabled, sendDisabled, onSend }: ChatInputProps) {
+export function ChatInput({
+  disabled,
+  sendDisabled,
+  attachDisabled,
+  onSend,
+  onAttach,
+}: ChatInputProps) {
   const [value, setValue] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function submit() {
     const message = value.trim();
@@ -30,38 +39,77 @@ export function ChatInput({ disabled, sendDisabled, onSend }: ChatInputProps) {
     }
   }
 
+  function openFilePicker() {
+    if (disabled || attachDisabled) return;
+    fileInputRef.current?.click();
+  }
+
+  function onFileSelected(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      onAttach(file);
+    }
+
+    // Cho phép chọn lại đúng file đó lần nữa nếu cần.
+    event.target.value = "";
+  }
+
   return (
-    <form onSubmit={onSubmit} className="shrink-0 border-t border-border bg-background px-4 py-4">
-      <div className="mx-auto max-w-4xl rounded-[1.7rem] border border-border bg-card p-3 shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors focus-within:border-accent/55">
+    <form
+      onSubmit={onSubmit}
+      className="shrink-0 border-t border-white/10 bg-transparent px-4 py-4"
+    >
+      <div className="mx-auto max-w-4xl rounded-[1.7rem] glass p-3 transition-colors">
         <textarea
           aria-label="Chat message"
           className="min-h-16 w-full resize-none bg-transparent px-3 py-2 text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed"
-          placeholder={sendDisabled ? "Upload a ready PDF before asking..." : "Ask AIO anything... (Shift+Enter for a new line)"}
+          placeholder={
+            sendDisabled
+              ? "Upload a ready PDF before asking..."
+              : "Ask AIO anything... (Shift+Enter for a new line)"
+          }
           value={value}
           rows={2}
           disabled={disabled}
           onChange={(event) => setValue(event.target.value)}
           onKeyDown={onKeyDown}
         />
-        <div className="mt-2 flex items-center justify-between gap-3 border-t border-border/60 px-2 pt-3">
+
+        <div className="mt-2 flex items-center justify-between gap-3 border-t border-white/10 px-2 pt-3">
+          {/* Attach PDF */}
           <button
             type="button"
-            disabled
-            className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-2 text-xs font-medium text-muted-foreground disabled:cursor-not-allowed disabled:opacity-55"
-            aria-label="Attach PDF unavailable"
+            disabled={disabled || attachDisabled}
+            onClick={openFilePicker}
+            className="glass-button-secondary rounded-full px-3 py-2 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-55"
+            aria-label="Attach PDF"
           >
-            <span>📎</span>
-            Attach PDF
+            <span aria-hidden="true">📎</span>
+            <span>Attach PDF</span>
           </button>
+
+          {/* Hidden file picker */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,application/pdf"
+            className="hidden"
+            onChange={onFileSelected}
+          />
+
+          {/* Send */}
           <button
             type="submit"
             disabled={disabled || sendDisabled || !value.trim()}
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent/85 disabled:cursor-not-allowed disabled:opacity-40"
+            className="glass-button-primary rounded-full px-5 py-2.5 text-sm font-semibold disabled:cursor-not-allowed"
           >
-            Send <span aria-hidden="true">↗</span>
+            <span>Send</span>
+            <span aria-hidden="true">↗</span>
           </button>
         </div>
       </div>
+
       <p className="mx-auto mt-3 max-w-4xl text-center text-[11px] text-muted-foreground">
         AIO can make mistakes. Please verify important information.
       </p>

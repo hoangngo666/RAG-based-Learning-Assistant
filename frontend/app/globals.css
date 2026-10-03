@@ -4,16 +4,16 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
-  --color-background: oklch(0.115 0.01 265);
-  --color-foreground: oklch(0.93 0.008 270);
-  --color-muted: oklch(0.19 0.012 270);
-  --color-muted-foreground: oklch(0.64 0.012 272);
-  --color-border: oklch(0.27 0.014 274 / 0.78);
-  --color-card: oklch(0.16 0.012 269 / 0.96);
-  --color-accent: oklch(0.54 0.075 282);
-  --color-accent-foreground: oklch(0.95 0.008 286);
-  --color-secondary-accent: oklch(0.46 0.04 260);
-  --color-danger: oklch(0.58 0.12 24);
+  --color-background: oklch(0.18 0.02 265);
+  --color-foreground: oklch(0.95 0.005 270);
+  --color-muted: oklch(0.24 0.015 270);
+  --color-muted-foreground: oklch(0.72 0.01 272);
+  --color-border: oklch(0.35 0.02 274 / 0.8);
+  --color-card: oklch(0.22 0.018 269 / 0.85);
+  --color-accent: oklch(0.62 0.09 282);
+  --color-accent-foreground: oklch(0.98 0.005 286);
+  --color-secondary-accent: oklch(0.52 0.05 260);
+  --color-danger: oklch(0.65 0.14 24);
 }
 
 :root {
@@ -31,9 +31,21 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  background: linear-gradient(135deg, #080a11 0%, #0d0f18 55%, #080a10 100%);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+
+  /* Electric Violet -> Purple -> Mist Blue -> Soft Cyan */
+  background: linear-gradient(
+    90deg,
+    #895afd 0%,
+    #8663fc 28%,
+    #7d86ec 48%,
+    #789bea 68%,
+    #6fd2da 100%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 button,
@@ -43,12 +55,16 @@ input {
 }
 
 ::selection {
-  background: rgba(100, 91, 134, 0.42);
+  background: rgba(255, 255, 255, 0.28);
   color: white;
 }
 
+/* ==========================================================
+   SCROLLBAR
+   ========================================================== */
+
 .aio-scrollbar {
-  scrollbar-color: rgba(94, 92, 112, 0.58) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
   scrollbar-width: thin;
 }
 
@@ -61,8 +77,380 @@ input {
 }
 
 .aio-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(94, 92, 112, 0.58);
+  background: rgba(255, 255, 255, 0.35);
   border: 3px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
 }
+
+.aio-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.48);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* ==========================================================
+   MAIN LIQUID GLASS
+   ========================================================== */
+
+.glass {
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.17) 0%,
+    rgba(255, 255, 255, 0.1) 38%,
+    rgba(255, 255, 255, 0.07) 68%,
+    rgba(255, 255, 255, 0.13) 100%
+  );
+
+  backdrop-filter: blur(40px) saturate(190%) contrast(105%);
+  -webkit-backdrop-filter: blur(40px) saturate(190%) contrast(105%);
+
+  border: 1px solid rgba(255, 255, 255, 0.23);
+
+  box-shadow:
+    0 20px 50px rgba(20, 25, 70, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.44),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.07),
+    inset 1px 0 0 rgba(255, 255, 255, 0.11);
+
+  background-clip: padding-box;
+  outline: 1px solid rgba(255, 255, 255, 0.035);
+  outline-offset: -2px;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+/* Specular highlight */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 13%,
+    transparent 32%,
+    transparent 68%,
+    rgba(255, 255, 255, 0.07) 88%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
+  opacity: 0.62;
+  filter: blur(0.35px);
+  z-index: 0;
+}
+
+/* Inner ambient light */
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(80% 75% at 12% 0%, rgba(255, 255, 255, 0.19), transparent 58%),
+    radial-gradient(70% 80% at 100% 100%, rgba(255, 255, 255, 0.065), transparent 62%);
+  opacity: 0.82;
+  z-index: 0;
+}
+
+/* Content above glass */
+.glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.19) 0%,
+    rgba(255, 255, 255, 0.11) 38%,
+    rgba(255, 255, 255, 0.075) 68%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 24px 55px rgba(20, 25, 70, 0.21),
+    inset 0 1px 1px rgba(255, 255, 255, 0.48),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    inset 1px 0 0 rgba(255, 255, 255, 0.13);
+}
+
+/* Strong glass */
+.glass-strong {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.19) 0%,
+    rgba(255, 255, 255, 0.11) 40%,
+    rgba(255, 255, 255, 0.075) 70%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  backdrop-filter: blur(46px) saturate(190%) contrast(105%);
+  -webkit-backdrop-filter: blur(46px) saturate(190%) contrast(105%);
+  border-color: rgba(255, 255, 255, 0.26);
+  box-shadow:
+    0 22px 52px rgba(20, 25, 70, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.48),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.07),
+    inset 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================
+   INPUT / TEXTAREA
+   ========================================================== */
+
+.glass input,
+.glass textarea,
+.glass-input {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.glass input::placeholder,
+.glass textarea::placeholder,
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.74);
+  opacity: 1;
+  text-shadow: 0 1px 8px rgba(50, 40, 120, 0.15);
+}
+
+.glass input:focus::placeholder,
+.glass textarea:focus::placeholder,
+.glass-input:focus::placeholder {
+  color: rgba(255, 255, 255, 0.43);
+}
+
+/* ==========================================================
+   BUTTONS (FIXED: nổi bật hơn, vẫn là liquid glass)
+   ----------------------------------------------------------
+   Nút nằm TRONG .glass nên backdrop-filter của nút không
+   blur được nền phía sau. Vì vậy mình làm nền nút ĐẶC hơn,
+   viền sáng rõ, bóng + glow để tách khỏi khung.
+   ========================================================== */
+
+/* ---------- ATTACH PDF (secondary) ---------- */
+
+.glass-button-secondary {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  /* Kính trắng-lavender sáng, nổi trên khung */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(214, 200, 255, 0.24) 100%
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+
+  backdrop-filter: blur(12px) saturate(170%);
+  -webkit-backdrop-filter: blur(12px) saturate(170%);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.65),
+    inset 0 -1px 1px rgba(80, 45, 170, 0.18),
+    0 6px 18px rgba(60, 30, 150, 0.25);
+
+  text-shadow: 0 1px 6px rgba(45, 20, 110, 0.4);
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    color 180ms ease;
+}
+
+.glass-button-secondary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.08) 28%,
+    transparent 48%,
+    transparent 76%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  opacity: 0.8;
+}
+
+.glass-button-secondary > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-button-secondary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.46) 0%,
+    rgba(222, 210, 255, 0.32) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 9px 26px rgba(60, 30, 160, 0.32);
+  transform: translateY(-1px);
+}
+
+.glass-button-secondary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Attach đang bị khóa: vẫn nhìn rõ, chỉ hơi nhạt */
+.glass-button-secondary:disabled,
+.glass-button-secondary[disabled] {
+  opacity: 0.9;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- SEND (primary) ---------- */
+
+.glass-button-primary {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  /* Tím điện đậm, gần đặc để chữ trắng luôn rõ */
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.95) 0%,
+    rgba(91, 45, 200, 0.92) 100%
+  );
+
+  border: 1px solid rgba(235, 228, 255, 0.8);
+  color: #fff;
+
+  backdrop-filter: blur(12px) saturate(200%);
+  -webkit-backdrop-filter: blur(12px) saturate(200%);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -2px 6px rgba(40, 15, 110, 0.35),
+    0 0 22px rgba(139, 92, 246, 0.55),
+    0 10px 26px rgba(50, 25, 140, 0.4);
+
+  text-shadow: 0 1px 6px rgba(30, 10, 80, 0.45);
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.glass-button-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 22%,
+    transparent 46%,
+    transparent 72%,
+    rgba(255, 255, 255, 0.14) 100%
+  );
+  opacity: 0.85;
+}
+
+.glass-button-primary > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-button-primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 76, 250, 1) 0%,
+    rgba(105, 58, 218, 0.97) 100%
+  );
+  border-color: rgba(245, 240, 255, 0.95);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.75),
+    inset 0 -2px 6px rgba(40, 15, 110, 0.3),
+    0 0 30px rgba(150, 100, 255, 0.7),
+    0 13px 32px rgba(50, 25, 140, 0.45);
+  transform: translateY(-1px);
+}
+
+.glass-button-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Send bị khóa (chưa có PDF): mờ vừa phải, không còn "chìm" */
+.glass-button-primary:disabled,
+.glass-button-primary[disabled] {
+  opacity: 0.8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 6px rgba(40, 15, 110, 0.25),
+    0 6px 18px rgba(50, 25, 140, 0.25);
+}
+
+/* ==========================================================
+   ICON TUNING
+   ========================================================== */
+
+.glass-button-secondary svg {
+  color: rgba(255, 255, 255, 0.95);
+  filter: drop-shadow(0 1px 4px rgba(40, 20, 120, 0.3));
+}
+
+.glass-button-primary svg {
+  color: #fff;
+  filter: drop-shadow(0 1px 5px rgba(50, 20, 140, 0.35));
+}
+
+/* ==========================================================
+   KEYBOARD FOCUS
+   ========================================================== */
+
+.glass-button-secondary:focus-visible,
+.glass-button-primary:focus-visible,
+.glass input:focus-visible,
+.glass textarea:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .glass,
+  .glass-button-secondary,
+  .glass-button-primary {
+    transition: none;
+  }
+}
+
+/* .glass đặt position: relative nên đè mất sticky/fixed/absolute của Tailwind.
+   Ba dòng này trả lại đúng vị trí khi dùng chung với .glass */
+.glass.sticky { position: sticky; }
+.glass.fixed { position: fixed; }
+.glass.absolute { position: absolute; }
