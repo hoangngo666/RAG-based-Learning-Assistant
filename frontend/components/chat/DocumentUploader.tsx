@@ -24,28 +24,32 @@ export function DocumentUploader({ disabled, onUpload }: { disabled?: boolean; o
   }
 
   return (
+    // Khung ngoài: kính trắng đục giống nút "Attach PDF" (glass-button-secondary).
     <label
       onDrop={onDrop}
       onDragOver={onDragOver}
-      className="group block cursor-pointer rounded-3xl border border-dashed border-border bg-card p-5 text-center shadow-[0_8px_24px_rgba(0,0,0,0.16)] transition-colors hover:border-accent/45 hover:bg-muted/65 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60"
+      className="glass-button-secondary group w-full cursor-pointer flex-col rounded-3xl p-2 text-center has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-90"
     >
-      <span className="mx-auto flex size-14 items-center justify-center rounded-2xl border border-border bg-muted text-2xl text-accent/85">
-        ⇧
+      {/* Khung trong: thêm lớp trắng đục + viền nét đứt */}
+      <span className="block w-full rounded-[1.25rem] border border-dashed border-white/60 bg-white/25 p-5 transition-colors group-hover:border-white/85 group-hover:bg-white/30">
+        <span className="mx-auto flex size-14 items-center justify-center rounded-2xl border border-white/50 bg-white/35 text-2xl text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+          ⇧
+        </span>
+        <span className="mt-4 block text-sm font-semibold text-white">Tap to select a PDF file</span>
+        <span className="mt-2 block text-xs leading-5 text-white/95">
+          Drag and drop lecture slides, notes, or textbook PDFs here.
+        </span>
+        <span className="mt-3 block font-mono text-[11px] text-white/85">
+          Max 10MB · First 30 pages will be read
+        </span>
+        <input
+          className="sr-only"
+          type="file"
+          accept="application/pdf,.pdf"
+          disabled={disabled}
+          onChange={onChange}
+        />
       </span>
-      <span className="mt-4 block text-sm font-semibold text-foreground">Tap to select a PDF file</span>
-      <span className="mt-2 block text-xs leading-5 text-muted-foreground">
-        Drag and drop lecture slides, notes, or textbook PDFs here.
-      </span>
-      <span className="mt-3 block font-mono text-[11px] text-muted-foreground">
-        Max 10MB · First 30 pages will be read
-      </span>
-      <input
-        className="sr-only"
-        type="file"
-        accept="application/pdf,.pdf"
-        disabled={disabled}
-        onChange={onChange}
-      />
     </label>
   );
 }

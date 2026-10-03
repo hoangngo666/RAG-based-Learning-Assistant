@@ -401,25 +401,27 @@ export default function Home() {
         />
 
         <section className={`grid min-h-screen min-w-0 transition-[grid-template-columns] duration-300 ${isFlashcardsOpen ? "xl:grid-cols-[minmax(0,1fr)_380px]" : "xl:grid-cols-[minmax(0,1fr)_0px]"}`}>
-          <div className="flex min-h-screen min-w-0 flex-col bg-background">
-            <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between gap-4 border-b border-border bg-background px-5 md:px-7">
+          <div className="flex min-h-screen min-w-0 flex-col">
+            <header className="glass sticky top-0 z-20 flex min-h-16 items-center justify-between gap-4 px-5 md:px-7">
               <div className="flex min-w-0 items-center gap-3">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-border/70 bg-muted text-lg text-accent">
                   ✦
                 </span>
                 <div className="min-w-0">
                   <h1 className="truncate text-sm font-semibold tracking-[-0.02em]">AIO</h1>
-                  <p className="truncate text-xs text-muted-foreground">AI Tutor · always in focus mode</p>
+                  <p className="truncate text-xs text-white/80">AI Tutor · always in focus mode</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="hidden rounded-full border border-border/70 px-3 py-1.5 font-mono text-[11px] text-muted-foreground sm:inline-flex">
+                {/* Chip "starting": liquid glass */}
+                <span className="glass hidden rounded-full px-3 py-1.5 font-mono text-[11px] text-white/90 sm:inline-flex">
                   {sessionIdLabel}
                 </span>
+                {/* Nút Flashcards: liquid glass */}
                 <button
                   type="button"
                   onClick={() => setIsFlashcardsOpen((current) => !current)}
-                  className="hidden items-center gap-2 rounded-full border border-accent/45 bg-accent/12 px-4 py-2 text-xs font-semibold text-accent transition hover:bg-accent/20 xl:inline-flex"
+                  className="glass hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white xl:inline-flex"
                   aria-pressed={isFlashcardsOpen}
                 >
                   <svg
@@ -452,12 +454,12 @@ export default function Home() {
             ) : null}
 
             <div className="grid min-h-0 flex-1 grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)]">
-              <aside className="border-b border-border/70 bg-background/30 p-4 xl:border-r xl:border-b-0">
+              <aside className="border-b border-border/70 p-4 xl:border-r xl:border-b-0">
                 <div className="space-y-5 xl:sticky xl:top-[5rem]">
                   <DocumentUploader disabled={!session || isUploading || isGeneratingFlashcards} onUpload={onUpload} />
                   <section className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h2 className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+                      <h2 className="text-xs font-semibold tracking-[0.18em] text-white/80 uppercase">
                         Session documents
                       </h2>
                       {isUploading ? (
@@ -490,12 +492,14 @@ export default function Home() {
         </section>
 
         <ChatComposer
-          disabled={!session}
-          sendDisabled={!hasReadyDocument || isStreaming}
-          isFlashcardsOpen={isFlashcardsOpen}
-          sidebarOffsetClass={composerSidebarOffsetClass}
-          onSend={onSend}
-        />
+  disabled={!session}
+  sendDisabled={!hasReadyDocument || isStreaming}
+  attachDisabled={isUploading || isGeneratingFlashcards}
+  isFlashcardsOpen={isFlashcardsOpen}
+  sidebarOffsetClass={composerSidebarOffsetClass}
+  onSend={onSend}
+  onUpload={onUpload}
+/>
       </div>
     </main>
   );
